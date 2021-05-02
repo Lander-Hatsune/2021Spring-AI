@@ -1,12 +1,11 @@
 import numpy as np
 import argparse
-import fileinput
 import pickle
 from copy import deepcopy
 
 
 # num to char: charlist
-with open('ref/charlist.txt', encoding='gbk') as f:
+with open('data/charlist.txt', encoding='gbk') as f:
     charlist = f.readline()# only one line
 
 # (char, char) tuple to log probability: mesh_prob_log
@@ -68,37 +67,19 @@ def say(s: str):
 
 if __name__ == '__main__':
 
-    with open('ref/tests.txt') as f:
-        tests = f.readlines()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_file', type=str)
+    parser.add_argument('output_file', type=str)
+    args = parser.parse_args()
 
-    sentence_correct = 0
-    sentence_total = 0
-    word_correct = 0
-    word_total = 0
 
-    for i in range(0, len(tests), 2):
-        pred = say(tests[i])
+    with open(args.input_file) as f:
+        testcases = f.readlines()
 
-        #print(tests[i + 1].strip())
-        #print(pred)
-        
-        gt = tests[i + 1]
-        sentence_total += 1
-        sentence_wrong = False
-        for p, g in zip(pred, gt):
-            word_total += 1
-            if p == g:
-                word_correct += 1
-            else:
-                sentence_wrong = True
-        if not sentence_wrong:
-            sentence_correct += 1
-            #print('correct\n')
-        else:
-            #print('wrong\n')
-            pass
-            
-    print('Tests done')
-    print('Sentence acc: {:.3f}'.format(sentence_correct / sentence_total))
-    print('Word acc: {:.3f}'.format(word_correct / word_total))
-
+        with open(args.output_file, 'w+') as f:
+            for words in testcases:
+                print(say(words), file=f)
+                print(words.strip())
+                print(say(words))
+                
+    

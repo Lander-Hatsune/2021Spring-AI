@@ -137,3 +137,7 @@ dmypy.json
 
 # NumPy models
 *.npy
+
+# handin, reports
+*/handin/
+*/report/
